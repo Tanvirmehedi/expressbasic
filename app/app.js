@@ -1,15 +1,16 @@
 //require dotenv and give the path
 require("dotenv").config("../.env");
 const express = require("express");
-const morgan = require("morgan");
-const cors = require("cors");
+const { notFound, globalErrorHandler } = require("./error");
+const middleware = require("./middleware");
+const { route } = require("./routes");
+
 const app = express();
 
 // Initialization Global Middleware
-app.use([morgan("dev"), cors(), express.json()]);
-
-app.get("/health", (_req, res, _next) => {
-  res.status(200).json({ message: "Success" });
-});
+app.use(middleware);
+app.use(route);
+app.use(notFound);
+app.use(globalErrorHandler);
 
 module.exports = app;
